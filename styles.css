@@ -10,6 +10,10 @@
     --border-radius: 0.5rem;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -929,4 +933,127 @@ body.drawer-open .menu-toggle span:last-child {
 
 .mobile-drawer p {
     padding-top: 35px;
+}
+
+.contact {
+    padding: 4rem 1rem;
+    background-color: white;
+}
+
+.contact .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-info {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-info h3 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.contact-details {
+    margin-top: 1.5rem;
+}
+
+.contact-details p {
+    margin-bottom: 0.5rem;
+}
+
+.developer-profile {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    /* margin-top: 1.5rem; */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.developer-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.developer-profile h4 {
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.developer-profile h4::before {
+    content: "👨‍💻";
+    font-size: 1.5rem;
+}
+
+.developer-profile p {
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.developer-profile a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.developer-profile a::before {
+    content: "📧";
+    font-size: 1.2rem;
+}
+
+.developer-profile a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .contact {
+        padding: 3rem 1rem;
+    }
+    
+    .contact h2 {
+        font-size: 1.75rem;
+    }
+    
+    .contact-info {
+        padding: 1.5rem;
+    }
+
+    .developer-profile {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .developer-profile h4 {
+        justify-content: center;
+    }
 }
