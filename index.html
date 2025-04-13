@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Photo Cropping and Signature Resizer Tool</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <header class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="/" class="logo-link">
+                        <img src="assets/logo.png" alt="CropNResize Logo" class="logo">
+                        <span class="logo-text">CropNResize</span>
+                    </a>
+                    <button class="menu-toggle" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <nav class="main-nav">
+                        <ul>
+                            <li><a href="#how-to-use">How to Use</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Menu Drawer -->
+        <div class="mobile-drawer">
+            <div class="drawer-header">
+                <div class="drawer-brand">
+                    <img src="assets/logo.png" alt="CropNResize Logo" class="logo">
+                    <span class="logo-text">CropNResize</span>
+                </div>
+                <button class="drawer-close" aria-label="Close menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="drawer-nav">
+                <ul>
+                    <li>
+                        <a href="#how-to-use">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            How to Use
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#contact">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="drawer-footer">
+                <p>Free online tool to resize and crop images for various exam applications</p>
+            </div>
+        </div>
+        <div class="drawer-overlay"></div>
+
+        <header class="site-header">
+            <h1>Free Photo Cropping and Signature Resizer Tool For IBPS RRB, PO, SSC, Railway, Gate, UPPSC Exams</h1>
+            <p class="subtitle">Use this Free Image Resizing & Cropping Tool to upload Your Image & Signature in specific dimensions & format for all the Competitive Exams, Just Specify the Right Dimension, Crop It and Download it for Free.</p>
+        </header>
+
+        <main class="main-content">
+            <div class="app-container">
+                <div id="uploadSection" class="upload-section">
+                    <div class="upload-card">
+                        <div class="upload-area" id="uploadArea">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <p>Drop your image here</p>
+                            <span>or click to browse</span>
+                            <input type="file" id="fileInput" accept="image/*" class="file-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="editorSection" class="editor-section" style="display: none;">
+                    <div class="editor-container">
+                        <div class="preview-section">
+                            <div class="preview-container" id="previewContainer">
+                                <div class="preview-wrapper">
+                                    <canvas id="previewCanvas"></canvas>
+                                    <div id="cropBox" class="crop-box">
+                                        <div class="crop-area"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controls-panel">
+                            <div class="dimension-control">
+                                <div class="input-group">
+                                    <label for="width">Width</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" id="width" value="200">
+                                        <div class="unit-selector">
+                                            <span>px</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="height">Height</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" id="height" value="200">
+                                        <div class="unit-selector">
+                                            <span>px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="size-control">
+                                <div class="input-group">
+                                    <label for="maxSize">Max Size (in KB)</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" id="maxSize" value="50">
+                                        <div class="unit-selector">
+                                            <span>KB</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="minSize">Min Size (in KB)</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" id="minSize" value="10">
+                                        <div class="unit-selector">
+                                            <span>KB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button id="previewBtn" class="btn btn-primary">Preview</button>
+                                <button id="downloadBtn" class="btn btn-primary" style="display: none;">Download</button>
+                                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section class="how-to-use">
+            <div class="container">
+                <h2>How to Use the Photo Crop & Signature Resizer Tool</h2>
+                <p class="section-intro">Easily resize images for documents and exam applications by following these three simple steps:</p>
+                
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Set Image Specifications</h3>
+                        <p>Define the required dimensions, including height, width, and file size, as per the application guidelines. For reference, check the table below for image requirements of major exams. For instance, if you need an image for the IBPS PO Exam, enter 200 pixels (or cm) for height and 300 pixels (or cm) for width, then proceed to download.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Upload Your Image</h3>
+                        <p>Select and upload the image or document that needs resizing. Use the provided adjustment tools to align the image within the designated frame.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Preview & Verify</h3>
+                        <p>Before downloading, preview the image to ensure it is correctly cropped and meets the required dimensions and file size.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>Download the Resized Image</h3>
+                        <p>Once verified, download the optimized image, ready for submission with your exam or document application.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <img src="assets/logo.png" alt="CropNResize Logo" class="logo">
+                        <p>Free online tool to resize and crop images for various exam applications</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="#how-to-use">How to Use</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                            <li><a href="#privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>Have questions? Email us at:</p>
+                        <a href="mailto:support@cropnresize.com">support@cropnresize.com</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 CropNResize. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Preview</h3>
+                <button id="closePreview" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <canvas id="previewOutputCanvas"></canvas>
+                <div class="image-info">
+                    <div class="info-item">
+                        <span class="info-label">Dimensions:</span>
+                        <span id="previewDimensions" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">File Size:</span>
+                        <span id="previewFileSize" class="info-value">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmDownload" class="btn btn-primary">Download</button>
+                <button id="cancelPreview" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
