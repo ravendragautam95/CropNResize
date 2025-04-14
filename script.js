@@ -35,6 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let imageY = 0;
     let croppedImageData = null;
 
+    // Touch event handling
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartImageX = 0;
+    let touchStartImageY = 0;
+    let lastTouchDistance = 0;
+    let isPinching = false;
+
     // Initialize default values
     widthInput.value = 200;
     heightInput.value = 200;
@@ -172,12 +180,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let canvasWidth, canvasHeight;
 
-        if (imageAspectRatio > containerAspectRatio) {
-            canvasWidth = containerWidth;
-            canvasHeight = containerWidth / imageAspectRatio;
+        // Adjust for mobile viewport
+        if (window.innerWidth <= 768) {
+            // On mobile, make the canvas slightly larger than the container
+            // to allow for better touch interaction
+            canvasWidth = containerWidth * 1.2;
+            canvasHeight = canvasWidth / imageAspectRatio;
+            
+            if (canvasHeight < containerHeight) {
+                canvasHeight = containerHeight * 1.2;
+                canvasWidth = canvasHeight * imageAspectRatio;
+            }
         } else {
-            canvasHeight = containerHeight;
-            canvasWidth = containerHeight * imageAspectRatio;
+            if (imageAspectRatio > containerAspectRatio) {
+                canvasWidth = containerWidth;
+                canvasHeight = containerWidth / imageAspectRatio;
+            } else {
+                canvasHeight = containerHeight;
+                canvasWidth = containerHeight * imageAspectRatio;
+            }
         }
 
         previewCanvas.width = canvasWidth;
@@ -425,9 +446,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Image drag handling
-    previewCanvas.addEventListener('mousedown', startDragging);
-    document.addEventListener('mousemove', handleDragging);
-    document.addEventListener('mouseup', stopDragging);
+    previewCanvas.addEventListener('mousedown', (e) => {
+        if (e.touches) return; // Skip if touch event
+        startDragging(e);
+    });
+
+    // Add touch support to the crop box
+    cropBox.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startDragging(e);
+    });
 
     function startDragging(e) {
         isDragging = true;
@@ -502,5 +530,95 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape' && document.body.classList.contains('drawer-open')) {
             closeDrawer();
         }
+    });
+
+    // Touch event handling
+    previewCanvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (e.touches.length === 1) {
+            // Single touch - dragging
+            const touch = e.touches[0];
+            const rect = previewCanvas.getBoundingClientRect();
+            touchStartX = touch.clientX - rect.left;
+            touchStartY = touch.clientY - rect.top;
+            touchStartImageX = imageX;
+            touchStartImageY = imageY;
+            isDragging = true;
+        } else if (e.touches.length === 2) {
+            // Two touches - pinch to zoom
+            isPinching = true;
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            lastTouchDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+        }
+    });
+
+    previewCanvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (isDragging && e.touches.length === 1) {
+            const touch = e.touches[0];
+            const rect = previewCanvas.getBoundingClientRect();
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
+            
+            // Calculate new position
+            imageX = touchStartImageX + (touchX - touchStartX);
+            imageY = touchStartImageY + (touchY - touchStartY);
+            
+            // Constrain the movement
+            constrainImage();
+            drawImage();
+        } else if (isPinching && e.touches.length === 2) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            
+            // Calculate zoom factor
+            const zoomFactor = currentDistance / lastTouchDistance;
+            const oldZoom = currentZoom;
+            currentZoom = Math.min(400, Math.max(100, currentZoom * zoomFactor));
+            
+            // Update position to zoom towards center of pinch
+            const centerX = (touch1.clientX + touch2.clientX) / 2;
+            const centerY = (touch1.clientY + touch2.clientY) / 2;
+            const rect = previewCanvas.getBoundingClientRect();
+            const centerCanvasX = centerX - rect.left;
+            const centerCanvasY = centerY - rect.top;
+            
+            const zoomChange = currentZoom / oldZoom;
+            imageX = centerCanvasX - (centerCanvasX - imageX) * zoomChange;
+            imageY = centerCanvasY - (centerCanvasY - imageY) * zoomChange;
+            
+            lastTouchDistance = currentDistance;
+            constrainImage();
+            drawImage();
+        }
+    });
+
+    previewCanvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        isDragging = false;
+        isPinching = false;
+    });
+
+    // Add double-tap to reset zoom
+    let lastTap = 0;
+    previewCanvas.addEventListener('touchend', (e) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        if (tapLength < 300 && tapLength > 0) {
+            // Double tap detected
+            e.preventDefault();
+            currentZoom = 100;
+            centerImage();
+            drawImage();
+        }
+        lastTap = currentTime;
     });
 }); 
