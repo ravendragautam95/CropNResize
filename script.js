@@ -451,6 +451,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startDragging(e);
     });
 
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging || e.touches) return;
+        handleDragging(e);
+    });
+
+    document.addEventListener('mouseup', (e) => {
+        if (e.touches) return;
+        stopDragging();
+    });
+
     // Add touch support to the crop box
     cropBox.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -459,8 +469,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startDragging(e) {
         isDragging = true;
-        startX = e.clientX - imageX;
-        startY = e.clientY - imageY;
+        const rect = previewCanvas.getBoundingClientRect();
+        
+        if (e.touches) {
+            // Touch event
+            const touch = e.touches[0];
+            startX = touch.clientX - rect.left;
+            startY = touch.clientY - rect.top;
+        } else {
+            // Mouse event
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+        }
+        
+        startX -= imageX;
+        startY -= imageY;
         previewCanvas.style.cursor = 'grabbing';
     }
 
@@ -468,9 +491,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging) return;
         
         e.preventDefault();
+        const rect = previewCanvas.getBoundingClientRect();
         
-        imageX = e.clientX - startX;
-        imageY = e.clientY - startY;
+        if (e.touches) {
+            // Touch event
+            const touch = e.touches[0];
+            imageX = touch.clientX - rect.left - startX;
+            imageY = touch.clientY - rect.top - startY;
+        } else {
+            // Mouse event
+            imageX = e.clientX - rect.left - startX;
+            imageY = e.clientY - rect.top - startY;
+        }
         
         constrainImage();
         drawImage();
